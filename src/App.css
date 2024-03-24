@@ -2,6 +2,13 @@
   text-align: center;
 }
 
+.flexBox{
+  margin-bottom: 50px;
+}
+
+.fetchButton {
+  margin-bottom: 100px;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +42,27 @@
   to {
     transform: rotate(360deg);
   }
+}
+/* App.css */
+
+
+.header-row {
+  background-color: #FFC53A;
+  color: black; /* Set text color to white for better readability */
+  padding: 3px; /* Add some padding for better visual appearance */
+}
+
+.dropdown-row {
+  display: flex; /* Set the display to flex */
+  justify-content: center;
+  margin-top: 3%;
+}
+
+.dropdown-row > div {
+  margin-right: 50px; /* Add margin between dropdowns */
+}
+
+button {
+  margin: 5px;
+  color: #FFC53A;
 }

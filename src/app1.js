@@ -22,6 +22,7 @@ function App() {
   const [dropdown1Value, setDropdown1Value] = useState('');
   const [allPlayersData, setAllPlayersData] = useState([]);
   const [team1Players, setTeam1Players] = useState([[],[],[]]);
+  const [team2Players, setTeam2Players] = useState([[],[],[]]);
   const [battersDivCount, setBattersDivCount] = useState(0);
   const [bowlersDivCount, setBowlersDivCount] = useState(0);
   const [allRoundersDivCount, setAllRoundersDivCount] = useState(0);
@@ -69,33 +70,41 @@ function App() {
     setDropdown1Value(event.target.value);
   };
 
-  const handleClick = (value, type) => {
+  const handleClick = async (value, type) => {
     console.log(`Button ${value} clicked`);
     // Add your logic here to handle button click with value
     if(type === 0) {
       setBattersDivCount(battersDivCount+1);
+      setTeam2Players(team2Players[0].push(value));
     }
     else if(type === 1) {
       setAllRoundersDivCount(allRoundersDivCount+1);
+      setTeam2Players(team2Players[1].push(value));
     }
     else if(type === 2) {
       setBowlersDivCount(bowlersDivCount+1);
+      setTeam2Players(team2Players[2].push(value));
     }
+    console.log(team2Players);
   };
 
-  const renderBatterDivs = (value) => {
+  useEffect(() => {
+    // Fetch CSV data when component mounts
+    console.log(team1Players);
+  }, [team2Players]);
+
+  const renderBatterDivs = () => {
     const divs = [];
     for (let i = 0; i < battersDivCount; i++) {
-      divs.push(<div key={i}> value </div>);
-      
+      divs.push(<div key={i}> ${team2Players[0][i]} </div>);
     }
     return divs;
   }
 
-  const renderAllrounderDivs = (name) => {
+  const renderAllrounderDivs = () => {
     const divs = [];
     for (let i = 0; i < battersDivCount; i++) {
-      divs.push(<div key={i}>name</div>);
+      divs.push(<div key={i}>Div {i + 1}</div>);
     }
     return divs;
   }
@@ -110,7 +119,9 @@ function App() {
 
   const handleFetchPlayers = () => {
     const team1Players = getListOfPlayersBasedOnTeamName(dropdown1Value);
+    //const team2Players = getListOfPlayersBasedOnTeamName(dropdown2Value);
     setTeam1Players(team1Players);
+    //setTeam2Players(team2Players);
   };
 
   return (
@@ -156,6 +167,7 @@ function App() {
         <Button variant="contained" className='fetchButton' color="primary" onClick={() => handleFetchPlayers()}>Fetch Players</Button>
         </Grid>
       </Grid>
+      
       <Grid container spacing={2} className='playercontainer' style={{ minHeight: '100vh' }}>
         <Grid item xs={2} >
           <Grid item xs={12}>
@@ -168,7 +180,7 @@ function App() {
             <Grid item xs={12}>
               <div>
                 {team1Players[0].map((value, index) => (
-                  <Button variant="contained" color="primary" className={classes.button} key={index} id={value[0]} onClick={() => handleClick(value,0)}>
+                  <Button variant="contained" color="primary" className={classes.button} key={index} id={value[0]} onClick={() => handleClick(value[0], 0)}>
                     {value[0]}
                     {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
                   </Button>
@@ -189,7 +201,7 @@ function App() {
             <Grid item xs={12}>
               <div className={classes.buttonContainer}>
                 {team1Players[2].map((value, index) => (
-                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value,1)}>
+                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value[0])}>
                     {value[0]}
                     {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
                   </Button>
@@ -210,16 +222,15 @@ function App() {
             <Grid item xs={12}>
               <div className={classes.buttonContainer}>
                 {team1Players[1].map((value, index) => (
-                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value,2)}>
-                  {value[0]}
-                  {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
-                </Button>
+                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value[0])}>
+                    {value[0]}
+                    {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
+                  </Button>
                 ))}
               </div>
             </Grid>
           </Grid> 
         </Grid>
-        
 
         <Grid item xs={2} >
           <Grid item xs={12}>
@@ -231,7 +242,12 @@ function App() {
             </Box>
             <Grid item xs={12}>
               <div>
-                {renderBatterDivs()}
+                {team1Players[0].map((value, index) => (
+                  <Button variant="contained" color="primary" className={classes.button} key={index} id={value[0]} onClick={() => handleClick(value[0], 0)}>
+                    {value[0]}
+                    {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
+                  </Button>
+                ))}
               </div>
             </Grid>
           </Grid> 
@@ -247,7 +263,12 @@ function App() {
             </Box>
             <Grid item xs={12}>
               <div className={classes.buttonContainer}>
-                {renderAllrounderDivs()}
+                {team1Players[2].map((value, index) => (
+                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value[0])}>
+                    {value[0]}
+                    {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
+                  </Button>
+                ))}
               </div>
             </Grid>
           </Grid> 
@@ -263,11 +284,19 @@ function App() {
             </Box>
             <Grid item xs={12}>
               <div className={classes.buttonContainer}>
-                {renderBowlerDivs()}
+                {team1Players[1].map((value, index) => (
+                  <Button variant="contained" color="primary" className={classes.button} key={index} onClick={() => handleClick(value[0])}>
+                    {value[0]}
+                    {value[3]==='Y' && <img src={'foreign.svg'} alt="" style={{ marginLeft: 5 }} />}
+                  </Button>
+                ))}
               </div>
             </Grid>
           </Grid> 
         </Grid>
+        
+
+        
       </Grid>
     </div>
   );
